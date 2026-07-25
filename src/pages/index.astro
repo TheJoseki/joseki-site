@@ -81,6 +81,14 @@ const description =
       Clawform is on sale. ClaudeBrew is not, and its card says which parts
       exist rather than implying the rest are close.
     </p>
+    <p class="lead lead-paper roadmap-line">
+      Both are early versions of something wider. The pattern — rules read
+      before writing, tools that make the real change reviewable, guards that
+      refuse the irreversible — does not depend on AWS, on CloudFormation, or
+      on Claude Code. Other clouds, other infrastructure languages and other
+      agents are where this goes. <strong>No dates</strong>: a schedule from a
+      one-person shop is a guess wearing a calendar. Buy what works today.
+    </p>
 
     <div class="grid">
       {products.map((entry) => <ProductCard entry={entry} />)}
@@ -129,6 +137,10 @@ const description =
   }
   .lead em { color: var(--on-ink-strong); font-style: italic; }
   .lead-paper { color: var(--on-paper-muted); margin-bottom: 40px; }
+  /* Sits under the section lead as context, not as a second headline — the
+     roadmap reassures a buyer without competing with what actually ships. */
+  .roadmap-line { font-size: var(--fs-base); max-width: 62ch; }
+  .roadmap-line strong { color: var(--on-paper); font-weight: 600; }
 
   .prose { display: grid; gap: 18px; }
   .prose p {
