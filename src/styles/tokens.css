@@ -40,6 +40,12 @@
   --accent-tint: #FFF4E5;  /* tinted band on paper */
   --accent-edge: #F3DDB8;  /* hairline around a tinted band */
 
+  /* Margin warning. --accent-deep is comfortable on white and tight on
+   * anything tinted: 4.62:1 on --accent-tint, 4.65:1 on --paper-2, against a
+   * 4.5 floor. Darkening either background by a hair fails it, and the failure
+   * is invisible by eye. If you touch those two values, run the harness — it
+   * measures these pairs on every build. */
+
   /* The rule this palette breaks most easily: white on --accent measures
    * 2.14:1 and fails every threshold. An accent fill carries a DARK label,
    * always. Accent text on paper uses --accent-deep or it is illegal. */
@@ -83,7 +89,16 @@
   --r-sm: 4px;
   --r-md: 8px;
   --r-lg: 12px;
-  --container: 1200px;
+  /* 860, not the product site's 1200. That page fills its right half with a
+   * terminal block; this one is a single column of prose capped around 62ch —
+   * roughly 620px — so a wide container leaves dead space to the right and the
+   * page reads as unfinished rather than deliberate. Narrowing is the honest
+   * fix; the alternative is inventing something to put there.
+   *
+   * 860 leaves about 190px of slack, which reads as a margin. It also still
+   * fits two 320px product cards side by side, which is the constraint that
+   * stops this going any narrower. */
+  --container: 860px;
   --gutter: 24px;
   --band: 96px;  /* vertical padding of a section */
 

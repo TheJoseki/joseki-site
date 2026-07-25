@@ -1,45 +1,99 @@
 ---
 /**
- * Phase 1 shell.
+ * Home.
  *
- * The copy here is placeholder and marked as such — the positioning line is
- * still being decided, and the products section is Phase 2 work driven by a
- * content collection rather than markup.
+ * Two rules this page follows, both borrowed from the product site because
+ * they are what make it credible:
  *
- * It is not empty on purpose: the verification harness measures contrast,
- * focus rings and overflow against rendered elements, so the shell has to
- * exercise every primitive it will eventually use — both canvases, both button
- * styles, the eyebrow, the grid motif.
+ *   1. No invented proof. No customer logos, no "trusted by", no metrics that
+ *      do not exist, no team page for one person.
+ *   2. Say the unflattering thing where it is true. Both products are early
+ *      and neither is on sale, and the page says so before it asks for
+ *      anything.
+ *
+ * It also does not re-pitch Clawform. That page sells the product; this one
+ * says why the product exists and gets out of the way.
  */
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Section from '../components/Section.astro';
+import ProductCard from '../components/ProductCard.astro';
 
-const title = 'Joseki — toolkits for agentic engineering';
+const products = (await getCollection('products')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const title = 'Joseki — known-good moves for agentic work';
 const description =
-  'Joseki builds toolkits for agentic AI. Clawform, safe CloudFormation workflows for Claude Code, is the first.';
+  'Joseki builds toolkits for agentic engineering work. Clawform, safe CloudFormation workflows for Claude Code, is the first.';
 ---
 
 <Base title={title} description={description}>
   <Section grid={true}>
-    <p class="eyebrow">Placeholder — positioning line pending</p>
-    <h1>Toolkits for agentic<br />engineering work.</h1>
+    <p class="eyebrow">Joseki</p>
+    <h1>Known-good moves<br />for agentic work.</h1>
     <p class="lead">
-      An agent that writes infrastructure is fast, and just as confident when
-      it is wrong. Joseki builds the layer that makes that difference safe to
-      run.
+      In Go, a <em>joseki</em> is a sequence that has been studied until it is
+      known to be sound — you play it because the work of checking has already
+      been done. That is what we build for engineering work an agent does:
+      the studied part, so the agent's speed is worth having.
     </p>
     <p class="actions">
-      <a class="btn btn-accent" href="mailto:support@thejoseki.com">Get in touch</a>
-      <a class="btn btn-ghost" href="#products">See what we build</a>
+      <a class="btn btn-accent" href="#products">What we build</a>
+      <a class="btn btn-ghost" href="mailto:support@thejoseki.com">Get in touch</a>
     </p>
   </Section>
 
+  <Section id="why">
+    <p class="eyebrow">Why toolkits</p>
+    <h2>An agent's confidence is not evidence.</h2>
+    <div class="prose">
+      <p>
+        A model that writes infrastructure, or a migration, or a release, is
+        genuinely fast — and it is exactly as fluent when it is wrong. The
+        output looks the same either way. That is the whole problem: the
+        failure mode is not gibberish you would catch, it is something
+        plausible you would not.
+      </p>
+      <p>
+        Prompting harder does not fix that, because the thing missing is not
+        instruction. What is missing is the part a careful engineer supplies
+        without being asked — knowing which move is safe here, refusing the one
+        that is not, and stopping to show you the diff before it lands.
+      </p>
+      <p>
+        So we build that part: rules an agent reads before it writes, tools
+        that make the real change deterministic and reviewable, and guards that
+        refuse the commands nobody should run by accident. Each tool states
+        what it does not cover, because a safety claim you cannot keep is worse
+        than none.
+      </p>
+    </div>
+  </Section>
+
   <Section id="products" tone="paper">
-    <p class="eyebrow">Products</p>
-    <h2>Placeholder</h2>
+    <p class="eyebrow">What we build</p>
+    <h2>Two tools, both early.</h2>
     <p class="lead lead-paper">
-      Phase 2 replaces this with a content collection, so adding a product is a
-      Markdown file rather than an edit to this page.
+      Neither is on sale yet. Where something is unfinished, the card says which
+      part.
+    </p>
+
+    <div class="grid">
+      {products.map((entry) => <ProductCard entry={entry} />)}
+    </div>
+  </Section>
+
+  <Section tone="paper-2">
+    <p class="eyebrow">Contact</p>
+    <h2>One address, answered by a person.</h2>
+    <p class="lead lead-paper">
+      No form, no list, no sequence of emails you did not ask for. If you want
+      to know when something ships, or whether it would fit what you run, write
+      and say so.
+    </p>
+    <p class="actions">
+      <a class="btn btn-dark" href="mailto:support@thejoseki.com">support@thejoseki.com</a>
     </p>
   </Section>
 </Base>
@@ -57,16 +111,38 @@ const description =
     font-size: var(--fs-h2);
     font-weight: 700;
     letter-spacing: -0.03em;
-    color: var(--on-paper);
+    color: var(--on-ink-strong);
     margin-bottom: 18px;
+    max-width: 24ch;
   }
+  :global(.on-paper) h2 { color: var(--on-paper); }
+
   .lead {
     font-size: var(--fs-lg);
     line-height: 1.55;
     color: var(--on-ink-muted);
-    max-width: 52ch;
+    max-width: 54ch;
     margin-bottom: 32px;
   }
-  .lead-paper { color: var(--on-paper-muted); margin-bottom: 0; }
+  .lead em { color: var(--on-ink-strong); font-style: italic; }
+  .lead-paper { color: var(--on-paper-muted); margin-bottom: 40px; }
+
+  .prose { display: grid; gap: 18px; }
+  .prose p {
+    font-size: var(--fs-base);
+    line-height: var(--lh-body);
+    color: var(--on-ink-muted);
+    max-width: 62ch;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 24px;
+    align-items: stretch;
+  }
+
   .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn-dark { background: var(--ink); color: var(--paper); }
+  .btn-dark:hover { background: var(--ink-3); }
 </style>

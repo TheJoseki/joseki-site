@@ -1,0 +1,136 @@
+---
+/**
+ * One product. Everything that varies comes from the collection entry, so
+ * adding the next tool stays a Markdown file — that is the reason this site is
+ * built on Astro at all.
+ *
+ * The status badge is load-bearing. Both products are early and neither is on
+ * sale; the badge is the only thing separating "you can ask about this" from
+ * "this exists and is unfinished". It renders the note verbatim from
+ * frontmatter so the claim lives with the product, not in this template where
+ * it would drift.
+ */
+import { render, type CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'products'>;
+}
+
+const { entry } = Astro.props;
+const { name, tagline, status, statusNote, accent, url, repo, npm } = entry.data;
+const { Content } = await render(entry);
+
+const primary = url ?? repo;
+---
+
+<article class="card" style={accent ? `--card-accent:${accent}` : undefined}>
+  <header class="card-head">
+    <h3>{name}</h3>
+    <p class:list={['badge', `badge-${status}`]}>{status.replace('-', ' ')}</p>
+  </header>
+
+  <p class="tagline">{tagline}</p>
+
+  <div class="body">
+    <Content />
+  </div>
+
+  <p class="status-note">{statusNote}</p>
+
+  <p class="links">
+    {primary && (
+      <a class="link-primary" href={primary}>
+        {url ? 'Visit' : 'Source'} <span aria-hidden="true">→</span>
+      </a>
+    )}
+    {npm && <a class="link-secondary mono" href={`https://www.npmjs.com/package/${npm}`}>{npm}</a>}
+  </p>
+</article>
+
+<style>
+  .card {
+    /* Falls back to the site accent when the entry does not name one. */
+    --card-accent: var(--accent);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--paper);
+    border: 1px solid var(--paper-line);
+    border-top: 3px solid var(--card-accent);
+    border-radius: var(--r-lg);
+    padding: 28px;
+  }
+
+  .card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 12px;
+  }
+  h3 {
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--on-paper);
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: var(--r-sm);
+    /* --accent-deep, not --accent: the accent itself is 2.14:1 on paper and
+     * illegal for text. */
+    color: var(--accent-deep);
+    background: var(--accent-tint);
+    border: 1px solid var(--accent-edge);
+  }
+  .badge-in-development {
+    color: var(--on-paper-muted);
+    background: var(--paper-2);
+    border-color: var(--paper-line);
+  }
+
+  .tagline {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--on-paper-muted);
+  }
+
+  .body :global(p) {
+    font-size: var(--fs-base);
+    line-height: var(--lh-body);
+    color: var(--on-paper);
+    max-width: 56ch;
+  }
+
+  .status-note {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    color: var(--on-paper-muted);
+    margin-top: auto;
+    padding-top: 4px;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    padding-top: 4px;
+  }
+  .link-primary {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--accent-deep);
+  }
+  .link-primary:hover { text-decoration: underline; }
+  .link-secondary {
+    font-size: var(--fs-xs);
+    color: var(--on-paper-muted);
+  }
+  .link-secondary:hover { color: var(--on-paper); }
+</style>
