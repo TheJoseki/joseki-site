@@ -38,6 +38,23 @@ const year = new Date().getFullYear();
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+  <!--
+    Cloudflare Web Analytics. Added by hand: the automatic setup on this
+    hostname belonged to the previous Pages project and stopped applying when
+    the domain moved, which is why the dashboard showed traffic while the
+    served HTML carried no beacon at all.
+
+    The token is public by design — it ships in every page — so it belongs in
+    the repository rather than in an environment variable that would only
+    pretend to hide it. `is:inline` keeps Astro from processing the tag.
+  -->
+  <script
+    is:inline
+    type="module"
+    src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token": "bba28df8e32b4b4da2c92feb86ca2088"}'
+  ></script>
 </head>
 
 <body>
@@ -61,6 +78,7 @@ const year = new Date().getFullYear();
     <div class="container footer-inner">
       <p class="footer-note">
         Joseki builds toolkits for agentic engineering work.
+        <a class="footer-link" href="https://discord.gg/EQ9zvmUWy">Discord</a>
       </p>
       <p class="colophon">&copy; {year} Joseki</p>
     </div>
@@ -105,6 +123,13 @@ const year = new Date().getFullYear();
     color: var(--on-ink-muted);
     max-width: 46ch;
   }
+  .footer-link {
+    color: var(--accent);
+    margin-left: 6px;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .footer-link:hover { color: var(--accent-hi); }
   .colophon {
     font-family: var(--mono);
     font-size: var(--fs-xs);

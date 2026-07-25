@@ -140,6 +140,11 @@ for (const { w, h, name } of VIEWPORTS) {
   page.on('response', (r) => {
     if (r.status() >= 400 && !EXPECTED_THIRD_PARTY.test(r.url())) badResponses.push(`${r.url()} — HTTP ${r.status()}`);
   });
+  // The beacon cannot load from localhost — Cloudflare serves it only for a
+  // known origin — and the failure prints a generic message naming no host,
+  // so no string filter can tell it from a real error. Fulfilled empty rather
+  // than aborted: an abort still logs ERR_FAILED, which is the noise removed.
+  if (!LIVE) await page.route('**/static.cloudflareinsights.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
 
   await page.goto(TARGET, { waitUntil: 'networkidle' });
   console.log(`\n--- ${name} ${w}x${h} ${'-'.repeat(38)}`);
@@ -169,6 +174,11 @@ for (const { w, h, name } of VIEWPORTS) {
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
+  // The beacon cannot load from localhost — Cloudflare serves it only for a
+  // known origin — and the failure prints a generic message naming no host,
+  // so no string filter can tell it from a real error. Fulfilled empty rather
+  // than aborted: an abort still logs ERR_FAILED, which is the noise removed.
+  if (!LIVE) await page.route('**/static.cloudflareinsights.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
   await page.goto(TARGET, { waitUntil: 'networkidle' });
   console.log(`\n--- contrast ${'-'.repeat(46)}`);
 
@@ -241,6 +251,11 @@ for (const { w, h, name } of VIEWPORTS) {
 {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await ctx.newPage();
+  // The beacon cannot load from localhost — Cloudflare serves it only for a
+  // known origin — and the failure prints a generic message naming no host,
+  // so no string filter can tell it from a real error. Fulfilled empty rather
+  // than aborted: an abort still logs ERR_FAILED, which is the noise removed.
+  if (!LIVE) await page.route('**/static.cloudflareinsights.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
   await page.goto(TARGET, { waitUntil: 'networkidle' });
   console.log(`\n--- keyboard ${'-'.repeat(46)}`);
 
@@ -271,6 +286,11 @@ for (const { w, h, name } of VIEWPORTS) {
 {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' });
   const page = await ctx.newPage();
+  // The beacon cannot load from localhost — Cloudflare serves it only for a
+  // known origin — and the failure prints a generic message naming no host,
+  // so no string filter can tell it from a real error. Fulfilled empty rather
+  // than aborted: an abort still logs ERR_FAILED, which is the noise removed.
+  if (!LIVE) await page.route('**/static.cloudflareinsights.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
   await page.goto(TARGET, { waitUntil: 'networkidle' });
   const scroll = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
   t(scroll === 'auto', `reduced motion disables smooth scrolling (got "${scroll}")`);
