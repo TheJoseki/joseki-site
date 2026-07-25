@@ -80,15 +80,41 @@ disk and unstyled in production.
 
 ## Deploy
 
-Cloudflare Pages, connected to this repository.
+```bash
+npm run deploy      # compile, then push dist/ to Cloudflare Pages
+```
 
-| Setting | Value |
-|---|---|
-| Framework preset | Astro |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Production branch | `main` |
+The Pages project is **`thejoseki`** (`thejoseki.pages.dev`), created by the
+CLI. That makes it a **Direct Upload** project, which has one consequence worth
+knowing before you rely on it: a Direct Upload project cannot later be
+connected to a Git repository, so pushing to `main` does **not** deploy.
+Every release is `npm run deploy`, run by a person.
 
-`thejoseki.com` is **not** attached yet — it still points at the previous site.
-Moving it is the last step, and it is deliberately last: the domain should not
-change hands until the harness passes against the deployed URL.
+If auto-deploy is wanted later, it means creating a second project through the
+dashboard with Git connected, and moving the domain to it.
+
+Note the project name: the pre-existing `joseki-site` project is the **old**
+site and still holds `thejoseki.com`. Deploying to that name would overwrite
+the live domain, which is why this one is called something else.
+
+### Authentication
+
+`wrangler` picks `CLOUDFLARE_API_TOKEN` over an OAuth login, so if that
+variable is set and stale, every command fails with `Invalid API Token` no
+matter how many times you log in:
+
+```bash
+unset CLOUDFLARE_API_TOKEN && npx wrangler login
+env -u CLOUDFLARE_API_TOKEN npm run deploy
+```
+
+### The domain
+
+`thejoseki.com` is **not** attached yet — it still points at the old project.
+That is deliberate: the harness has to pass against the deployed URL before the
+domain changes hands, and it does.
+
+Moving it means removing the hostname from `joseki-site` and adding it to
+`thejoseki`, in that order — a hostname belongs to one Pages project at a time.
+Expect a short window where the domain resolves but TLS is still being issued.
+Leave the old project in place afterwards; it is the rollback.

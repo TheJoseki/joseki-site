@@ -11,6 +11,7 @@
     "compile": "astro build",
     "preview": "astro preview",
     "verify": "npm run compile && npm --prefix test run verify",
+    "deploy": "npm run compile && npx --yes wrangler@4 pages deploy dist --project-name thejoseki --branch main --commit-dirty=true",
     "astro": "astro"
   },
   "dependencies": {

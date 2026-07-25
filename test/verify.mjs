@@ -21,7 +21,13 @@ const OUT = join(ROOT, 'dist');
 const SHOTS = join(HERE, 'shots');
 mkdirSync(SHOTS, { recursive: true });
 
-const LIVE = process.argv[2] === 'live';
+// Accepts nothing (check the local build), the word `live` (the production
+// domain), or any URL — a Pages preview deployment has to be checkable before
+// the domain is pointed at it, which is the whole ordering the cutover
+// depends on.
+const arg = process.argv[2];
+const LIVE = Boolean(arg);
+const REMOTE = arg === 'live' ? 'https://thejoseki.com' : arg?.replace(/\/$/, '');
 
 // The output is served over HTTP, not opened as a file. Astro emits absolute
 // asset paths — correct for a web server, and over file:// they resolve to the
@@ -39,7 +45,7 @@ const MIME = {
 };
 
 let server;
-let origin = 'https://thejoseki.com';
+let origin = REMOTE;
 
 if (!LIVE) {
   server = createServer((req, res) => {
