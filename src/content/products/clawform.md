@@ -1,8 +1,8 @@
 ---
 name: Clawform
 tagline: Safe CloudFormation workflows for Claude Code
-status: pre-release
-statusNote: Not released yet — pricing on request
+status: available
+statusNote: $49 one-time, per seat — 3 device activations
 url: https://clawform.thejoseki.com
 npm: "@thejoseki/clawform"
 order: 1
