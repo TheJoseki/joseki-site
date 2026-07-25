@@ -1,0 +1,32 @@
+# Cloudflare Pages response headers. Copied from clawform-lp and re-checked,
+# not assumed.
+#
+# The page's own code loads a stylesheet and an SVG from this origin, nothing
+# else. The exception is Cloudflare Web Analytics, which Pages injects into the
+# served HTML rather than the page requesting it — carried over here because
+# the same decision was made for the product site.
+#
+# connect-src needs 'self' as well as the vendor host, and that is the part
+# that is easy to get wrong: the beacon LOADS from
+# static.cloudflareinsights.com but REPORTS to /cdn-cgi/rum on this origin.
+# Allowing only the vendor host lets the script load and silently send
+# nothing — analytics that look installed and collect no data, with no visible
+# symptom. That exact bug shipped on the product site and was caught by the
+# harness, not by looking at a dashboard.
+#
+# Astro is configured with inlineStylesheets:'never' so `style-src 'self'`
+# holds. If a build starts inlining a <style> block, this is what breaks.
+
+/*
+  Content-Security-Policy: default-src 'none'; script-src 'self' https://static.cloudflareinsights.com; connect-src 'self' https://static.cloudflareinsights.com https://cloudflareinsights.com; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Astro fingerprints these filenames, so they can be cached hard.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

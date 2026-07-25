@@ -1,0 +1,72 @@
+---
+/**
+ * Phase 1 shell.
+ *
+ * The copy here is placeholder and marked as such — the positioning line is
+ * still being decided, and the products section is Phase 2 work driven by a
+ * content collection rather than markup.
+ *
+ * It is not empty on purpose: the verification harness measures contrast,
+ * focus rings and overflow against rendered elements, so the shell has to
+ * exercise every primitive it will eventually use — both canvases, both button
+ * styles, the eyebrow, the grid motif.
+ */
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+
+const title = 'Joseki — toolkits for agentic engineering';
+const description =
+  'Joseki builds toolkits for agentic AI. Clawform, safe CloudFormation workflows for Claude Code, is the first.';
+---
+
+<Base title={title} description={description}>
+  <Section grid={true}>
+    <p class="eyebrow">Placeholder — positioning line pending</p>
+    <h1>Toolkits for agentic<br />engineering work.</h1>
+    <p class="lead">
+      An agent that writes infrastructure is fast, and just as confident when
+      it is wrong. Joseki builds the layer that makes that difference safe to
+      run.
+    </p>
+    <p class="actions">
+      <a class="btn btn-accent" href="mailto:support@thejoseki.com">Get in touch</a>
+      <a class="btn btn-ghost" href="#products">See what we build</a>
+    </p>
+  </Section>
+
+  <Section id="products" tone="paper">
+    <p class="eyebrow">Products</p>
+    <h2>Placeholder</h2>
+    <p class="lead lead-paper">
+      Phase 2 replaces this with a content collection, so adding a product is a
+      Markdown file rather than an edit to this page.
+    </p>
+  </Section>
+</Base>
+
+<style>
+  h1 {
+    font-size: var(--fs-hero);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+    color: var(--on-ink-strong);
+    margin-bottom: 22px;
+  }
+  h2 {
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--on-paper);
+    margin-bottom: 18px;
+  }
+  .lead {
+    font-size: var(--fs-lg);
+    line-height: 1.55;
+    color: var(--on-ink-muted);
+    max-width: 52ch;
+    margin-bottom: 32px;
+  }
+  .lead-paper { color: var(--on-paper-muted); margin-bottom: 0; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+</style>

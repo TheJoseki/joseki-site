@@ -1,0 +1,115 @@
+---
+/**
+ * Page shell: head, header, footer, and the accessibility floor.
+ *
+ * Everything here is deliberately inert — no client-side script ships from
+ * this layout, and the CSP in public/_headers refuses inline anything, so a
+ * future `<script>` will fail loudly rather than quietly widen the surface.
+ */
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Canonical path, e.g. "/" — resolved against `site` in astro.config. */
+  path?: string;
+}
+
+const { title, description, path = '/' } = Astro.props;
+const canonical = new URL(path, Astro.site).href;
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="wordmark" href="/">
+        <img src="/favicon.svg" width="26" height="26" alt="" />
+        <span>Joseki</span>
+      </a>
+      <a class="btn btn-accent btn-sm" href="mailto:support@thejoseki.com">Get in touch</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-note">
+        Joseki builds toolkits for agentic engineering work.
+      </p>
+      <p class="colophon">&copy; {year} Joseki</p>
+    </div>
+  </footer>
+</body>
+</html>
+
+<style>
+  /* Layout-local. Tokens and shared primitives live in the stylesheets; only
+   * rules that exist nowhere else belong here. */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: color-mix(in srgb, var(--ink) 88%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .btn-sm { font-size: var(--fs-xs); padding: 11px 18px; }
+
+  .site-footer {
+    border-top: 1px solid var(--line);
+    background: var(--ink);
+  }
+  .footer-inner {
+    padding-block: 40px 56px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-note {
+    font-size: var(--fs-sm);
+    color: var(--on-ink-muted);
+    max-width: 46ch;
+  }
+  .colophon {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--on-ink-muted);
+  }
+</style>

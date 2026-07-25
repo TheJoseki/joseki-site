@@ -1,0 +1,14 @@
+{
+  "name": "joseki-site-test",
+  "private": true,
+  "type": "module",
+  "description": "Verification harness. Playwright lives here rather than in the root package.json so Cloudflare Pages does not install a browser toolchain on every deploy — the build needs Astro and nothing else.",
+  "scripts": {
+    "verify": "node verify.mjs",
+    "verify:live": "node verify.mjs live",
+    "setup": "npm install && npx playwright install chromium"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

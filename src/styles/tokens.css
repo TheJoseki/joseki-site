@@ -1,0 +1,110 @@
+/* Joseki — design tokens.
+ *
+ * Shared foundation with clawform.thejoseki.com: the same near-black canvas,
+ * the same white counter-sections, the same mono-for-structure / sans-for-prose
+ * split, the same discipline of carrying a measured contrast ratio next to
+ * every colour it applies to. If you change a value, re-measure it — the ratio
+ * is part of the token, not a comment about it.
+ *
+ * ── The accent ───────────────────────────────────────────────────────────
+ * `--accent` is defined ONCE, here. No other file in this tree may contain the
+ * literal #FF9900, and the verification harness fails the build if one appears.
+ *
+ * That constraint exists because of a decision that is deliberately reversible.
+ * Joseki currently shares Clawform's orange. The cost lands later: when a
+ * second product has a page, orange no longer distinguishes anything, and the
+ * accent stops carrying meaning. The alternative — Joseki owning the frame and
+ * each product owning an accent — was considered and set aside.
+ *
+ * Keeping the literal in exactly one place is what keeps that a one-line change
+ * instead of a search-and-replace across two sites.
+ */
+
+:root {
+  /* ── Ink: the default canvas ─────────────────────────────────────────── */
+  --ink:    #0A0A0B;
+  --ink-2:  #121214;  /* section fill, cards */
+  --ink-3:  #1C1C20;  /* raised chip, code fill */
+  --line:   #2A2A30;  /* hairline on ink */
+  --line-2: #3A3A44;  /* hairline, emphasised */
+
+  /* ── Paper: the counter-sections ─────────────────────────────────────── */
+  --paper:      #FFFFFF;
+  --paper-2:    #F7F6F4;  /* warm off-white band */
+  --paper-line: #E4E2DE;
+
+  /* ── The accent. One hue, one definition. ────────────────────────────── */
+  --accent:      #FF9900;  /* 9.24:1 against --ink, both directions */
+  --accent-hi:   #FFAD33;  /* hover, on ink only */
+  --accent-deep: #B45309;  /* 5.02:1 on paper — the only accent for TEXT there */
+  --accent-tint: #FFF4E5;  /* tinted band on paper */
+  --accent-edge: #F3DDB8;  /* hairline around a tinted band */
+
+  /* The rule this palette breaks most easily: white on --accent measures
+   * 2.14:1 and fails every threshold. An accent fill carries a DARK label,
+   * always. Accent text on paper uses --accent-deep or it is illegal. */
+  --on-accent: var(--ink);
+
+  /* ── Text ────────────────────────────────────────────────────────────── */
+  --on-ink:         #E9E9EC;  /* 16.33:1 on ink */
+  --on-ink-strong:  #FFFFFF;
+  --on-ink-muted:   #9A9AA5;  /*  7.11:1 on ink, 6.72:1 on ink-2 */
+  --on-paper:       #17171A;
+  --on-paper-muted: #5A5A64;  /*  6.82:1 on paper, 6.31:1 on paper-2 */
+
+  /* ── Type ────────────────────────────────────────────────────────────── *
+   * No webfont. The page makes no external request, so the type is whatever
+   * the reader's machine already has. Mono carries structure — wordmark,
+   * headings, labels, code — and sans carries running prose, because
+   * monospaced prose is measurably slower to read and the paragraphs here are
+   * meant to be believed, not skimmed.
+   *
+   * Design around this: the mono face differs per platform. Never depend on a
+   * glyph width or a particular mono's personality, only on the fact that it
+   * is mono. */
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+          "Liberation Mono", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+          Arial, sans-serif;
+
+  --fs-xs:   0.75rem;   /* 12px — legal, colophon */
+  --fs-sm:   0.875rem;  /* 14px — labels, notes */
+  --fs-base: 1rem;      /* 16px — body; never smaller on mobile */
+  --fs-lg:   1.125rem;  /* 18px — lead */
+  --fs-xl:   1.25rem;   /* 20px — h3 */
+  --fs-2xl:  1.5rem;    /* 24px — h2 small */
+  --fs-h2:   clamp(1.9rem, 3vw, 2.6rem);
+  --fs-hero: clamp(2.4rem, 4.6vw, 3.7rem);
+
+  --lh-body:    1.6;
+  --lh-heading: 1.1;
+
+  /* ── Geometry ────────────────────────────────────────────────────────── */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --container: 1200px;
+  --gutter: 24px;
+  --band: 96px;  /* vertical padding of a section */
+
+  /* ── Background motifs ───────────────────────────────────────────────── *
+   * Compose, never restyle: a 1px grid on 64px for the "infrastructure"
+   * plane, and one accent radial. No mesh gradients, no blobs, no
+   * illustration. */
+  --grid-size: 64px;
+  --grid-line: rgba(255, 255, 255, 0.045);
+  --grid-line-paper: rgba(10, 10, 11, 0.055);
+  /* Derived, not restated. Written as rgba(255,153,0,0.15) this would be a
+   * second definition of the accent that the one-literal rule cannot see,
+   * because it is not spelled #FF9900. */
+  --glow: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+/* The geometry tokens tighten with the viewport, so every surface built on
+ * them reflows without needing a query of its own. */
+@media (max-width: 1024px) {
+  :root { --band: 72px; --container: 100%; }
+}
+@media (max-width: 640px) {
+  :root { --band: 56px; --gutter: 18px; --grid-size: 40px; }
+}

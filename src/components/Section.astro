@@ -1,0 +1,60 @@
+---
+/**
+ * A page band. Owns the vertical rhythm and which canvas it sits on, so no
+ * page has to remember either.
+ *
+ * `tone` picks the canvas. `.on-paper` is not cosmetic — global.css keys the
+ * eyebrow colour and the focus-ring colour off it, because the accent ring is
+ * too light to read against white.
+ */
+interface Props {
+  id?: string;
+  tone?: 'ink' | 'paper' | 'paper-2';
+  /** Adds the 1px infrastructure grid behind the content. */
+  grid?: boolean;
+  class?: string;
+}
+
+const { id, tone = 'ink', grid = false, class: extra = '' } = Astro.props;
+const onPaper = tone !== 'ink';
+---
+
+<section
+  id={id}
+  class:list={['band', `tone-${tone}`, { 'on-paper': onPaper }, extra]}
+>
+  {grid && <div class="bg-grid" aria-hidden="true"></div>}
+  <div class="container band-inner">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .band {
+    position: relative;
+    overflow: hidden;
+    padding-block: var(--band);
+  }
+  .band-inner { position: relative; }
+
+  .tone-ink { background: var(--ink); color: var(--on-ink); border-bottom: 1px solid var(--line); }
+  .tone-paper { background: var(--paper); color: var(--on-paper); }
+  .tone-paper-2 { background: var(--paper-2); color: var(--on-paper); }
+
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+    -webkit-mask-image: radial-gradient(115% 85% at 50% 0%, #000 25%, transparent 78%);
+            mask-image: radial-gradient(115% 85% at 50% 0%, #000 25%, transparent 78%);
+  }
+  .on-paper .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--grid-line-paper) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line-paper) 1px, transparent 1px);
+  }
+</style>
