@@ -1,8 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
+  // Nothing else tells a crawler this page exists.
+  integrations: [sitemap()],
+
   site: 'https://thejoseki.com',
 
   build: {
