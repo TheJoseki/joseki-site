@@ -66,6 +66,12 @@ const year = new Date().getFullYear();
         <img src="/favicon.svg" width="26" height="26" alt="" />
         <span>Joseki</span>
       </a>
+      <!-- The product by name, in the header: a visitor who never scrolls
+           still learns what this company sells. -->
+      <nav class="header-nav" aria-label="Main">
+        <a href="/#products">Products</a>
+        <a href="https://clawform.thejoseki.com">Clawform</a>
+      </nav>
       <a class="btn btn-accent btn-sm" href="mailto:support@thejoseki.com">Get in touch</a>
     </div>
   </header>
@@ -105,6 +111,22 @@ const year = new Date().getFullYear();
     gap: 24px;
   }
   .btn-sm { font-size: var(--fs-xs); padding: 11px 18px; }
+
+  .header-nav {
+    display: flex;
+    gap: 22px;
+    margin-left: auto;
+    margin-right: 4px;
+  }
+  .header-nav a {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--on-ink-muted);
+  }
+  .header-nav a:hover { color: var(--on-ink-strong); }
+  /* Room is tight next to the CTA on a phone; the links return on wider
+     screens, and the products anchor stays reachable through the hero. */
+  @media (max-width: 560px) { .header-nav { display: none; } }
 
   .site-footer {
     border-top: 1px solid var(--line);

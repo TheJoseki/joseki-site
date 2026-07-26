@@ -2,20 +2,20 @@
 /**
  * Home.
  *
- * Two rules this page follows, both borrowed from the product site because
- * they are what make it credible:
+ * Layout order is the argument (the dir.co.jp lesson, scaled to a one-product
+ * shop): identity in half a breath, then the flagship IN the hero doing its
+ * actual job, then the product grid, and only then the philosophy. The
+ * previous layout led with two screens of prose and read as a blog; a visitor
+ * must learn what is for sale before they are asked to care why.
+ *
+ * Two rules kept from the first version, because they are what make the page
+ * credible:
  *
  *   1. No invented proof. No customer logos, no "trusted by", no metrics that
- *      do not exist, no team page for one person.
+ *      do not exist, no team page for one person. The NEWS strip carries real
+ *      dated facts only.
  *   2. Say the unflattering thing where it is true. One product ships and one
  *      does not, and the page says which before it asks for anything.
- *
- * The launch discount on Clawform is deliberately NOT repeated here. It
- * expires, and a claim that expires in two places goes stale in one of them.
- * The product page owns the offer; this card owns the price.
- *
- * It also does not re-pitch Clawform. That page sells the product; this one
- * says why the product exists and gets out of the way.
  */
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
@@ -29,21 +29,95 @@ const products = (await getCollection('products')).sort(
 const title = 'Joseki — known-good moves for agentic work';
 const description =
   'Joseki builds toolkits for agentic engineering work. Clawform, safe CloudFormation workflows for Claude Code, is the first.';
+
+const CLAWFORM = 'https://clawform.thejoseki.com';
+
+// Real dates, real releases — the strip earns its place only while every line
+// is a checkable fact. Newest first, keep to three.
+const NEWS = [
+  { date: '2026-07-27', text: 'Clawform 2.2.0 — the content kit is now delivered only after a licence check', href: CLAWFORM },
+  { date: '2026-07-27', text: 'Free 14-day Clawform trial opens — full kit, no card', href: CLAWFORM },
+  { date: '2026-07-26', text: 'Team licence: ten devices on one key, $299 one-time', href: `${CLAWFORM}/#pricing` },
+];
 ---
 
 <Base title={title} description={description}>
   <Section grid={true}>
-    <p class="eyebrow">Joseki</p>
-    <h1>Known-good moves<br />for agentic work.</h1>
-    <p class="lead">
-      In Go, a <em>joseki</em> is a sequence that has been studied until it is
-      known to be sound — you play it because the work of checking has already
-      been done. That is what we build for engineering work an agent does:
-      the studied part, so the agent's speed is worth having.
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Joseki</p>
+        <h1>Known-good moves for agentic&nbsp;work.</h1>
+        <p class="lead">
+          In Go, a <em>joseki</em> is a sequence studied until it is known to be
+          sound. We build that for the engineering work an agent does — the
+          studied part, so the agent's speed is worth having.
+        </p>
+        <p class="actions">
+          <a class="btn btn-accent" href="#products">What we sell</a>
+          <a class="btn btn-ghost" href="mailto:support@thejoseki.com">Get in touch</a>
+        </p>
+      </div>
+
+      <!--
+        The flagship, above the fold, shown WORKING rather than described: the
+        one thing a stranger must leave with is "this company sells Clawform,
+        and this is what it does". The terminal excerpt is the hook's real
+        output, verbatim from the product site.
+      -->
+      <aside class="spotlight" aria-label="Clawform — flagship product">
+        <p class="spot-kicker">Flagship — on sale now</p>
+        <h2 class="spot-name">Clawform</h2>
+        <p class="spot-tag">Safe CloudFormation workflows for Claude Code</p>
+
+        <figure class="spot-term" aria-label="Example: the hook blocking a destructive command">
+          <div class="spot-term-head" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <p>claude code · PreToolUse hook</p>
+          </div>
+          <pre>$ aws cloudformation delete-stack --stack-name p-acme-billing-rds
+<span class="t-block">✗ blocked by Clawform — exit 2, the command never ran</span></pre>
+        </figure>
+
+        <p class="spot-trial">Free 14-day trial — full kit, no card.</p>
+        <p class="spot-price">Then $49 per seat · $299 per team · one-time</p>
+
+        <p class="spot-actions">
+          <a class="btn btn-accent" href={CLAWFORM}>Try Clawform free</a>
+          <a class="spot-docs" href={`${CLAWFORM}/docs/`}>Docs</a>
+        </p>
+      </aside>
+    </div>
+
+    <!-- dir.co.jp's NEWS pattern at one-person scale: dated, checkable, three lines. -->
+    <ul class="news" aria-label="News">
+      {NEWS.map((n) => (
+        <li>
+          <span class="news-date">{n.date}</span>
+          <a href={n.href}>{n.text}</a>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section id="products" tone="paper">
+    <p class="eyebrow">Products</p>
+    <h2>One shipped. One still early.</h2>
+    <p class="lead lead-paper">
+      Clawform is on sale. ClaudeBrew is not, and its card says which parts
+      exist rather than implying the rest are close.
     </p>
-    <p class="actions">
-      <a class="btn btn-accent" href="#products">What we build</a>
-      <a class="btn btn-ghost" href="mailto:support@thejoseki.com">Get in touch</a>
+
+    <div class="grid">
+      {products.map((entry) => <ProductCard entry={entry} />)}
+    </div>
+
+    <p class="lead lead-paper roadmap-line">
+      Both are early versions of something wider. The pattern — rules read
+      before writing, tools that make the real change reviewable, guards that
+      refuse the irreversible — does not depend on AWS, on CloudFormation, or
+      on Claude Code. Other clouds, other infrastructure languages and other
+      agents are where this goes. <strong>No dates</strong>: a schedule from a
+      one-person shop is a guess wearing a calendar. Buy what works today.
     </p>
   </Section>
 
@@ -71,27 +145,6 @@ const description =
         what it does not cover, because a safety claim you cannot keep is worse
         than none.
       </p>
-    </div>
-  </Section>
-
-  <Section id="products" tone="paper">
-    <p class="eyebrow">What we build</p>
-    <h2>One shipped. One still early.</h2>
-    <p class="lead lead-paper">
-      Clawform is on sale. ClaudeBrew is not, and its card says which parts
-      exist rather than implying the rest are close.
-    </p>
-    <p class="lead lead-paper roadmap-line">
-      Both are early versions of something wider. The pattern — rules read
-      before writing, tools that make the real change reviewable, guards that
-      refuse the irreversible — does not depend on AWS, on CloudFormation, or
-      on Claude Code. Other clouds, other infrastructure languages and other
-      agents are where this goes. <strong>No dates</strong>: a schedule from a
-      one-person shop is a guess wearing a calendar. Buy what works today.
-    </p>
-
-    <div class="grid">
-      {products.map((entry) => <ProductCard entry={entry} />)}
     </div>
   </Section>
 
@@ -128,6 +181,13 @@ const description =
   }
   :global(.on-paper) h2 { color: var(--on-paper); }
 
+  .hero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+    gap: 48px;
+    align-items: center;
+  }
+
   .lead {
     font-size: var(--fs-lg);
     line-height: 1.55;
@@ -137,10 +197,124 @@ const description =
   }
   .lead em { color: var(--on-ink-strong); font-style: italic; }
   .lead-paper { color: var(--on-paper-muted); margin-bottom: 40px; }
-  /* Sits under the section lead as context, not as a second headline — the
-     roadmap reassures a buyer without competing with what actually ships. */
-  .roadmap-line { font-size: var(--fs-base); max-width: 62ch; }
+  .roadmap-line { font-size: var(--fs-base); max-width: 62ch; margin-top: 40px; margin-bottom: 0; }
   .roadmap-line strong { color: var(--on-paper); font-weight: 600; }
+
+  /* ── Flagship spotlight ────────────────────────────────────────────── */
+  .spotlight {
+    background: var(--ink-2);
+    border: 1px solid var(--line-2);
+    border-top: 3px solid var(--accent);
+    border-radius: var(--r-lg);
+    padding: 26px 28px 28px;
+  }
+  .spot-kicker {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .spot-name {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--on-ink-strong);
+    margin-bottom: 2px;
+    max-width: none;
+  }
+  .spot-tag {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--on-ink-muted);
+    margin-bottom: 18px;
+  }
+
+  .spot-term {
+    background: var(--ink);
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .spot-term-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .spot-term-head span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--ink-3);
+  }
+  .spot-term-head span:first-child { background: var(--accent); }
+  .spot-term-head p {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    color: var(--on-ink-muted);
+    margin-left: 6px;
+  }
+  .spot-term pre {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--on-ink);
+    padding: 12px 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .t-block { color: var(--accent); }
+
+  .spot-trial {
+    font-size: var(--fs-base);
+    font-weight: 600;
+    color: var(--on-ink-strong);
+    margin-bottom: 4px;
+  }
+  .spot-price {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--on-ink-muted);
+    margin-bottom: 20px;
+  }
+  .spot-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .spot-docs {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--on-ink-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .spot-docs:hover { color: var(--on-ink-strong); }
+
+  /* ── News strip ────────────────────────────────────────────────────── */
+  .news {
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+    display: grid;
+    gap: 10px;
+    list-style: none;
+  }
+  .news li {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .news-date {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    color: var(--on-ink-muted);
+    flex-shrink: 0;
+  }
+  .news a {
+    font-size: var(--fs-sm);
+    color: var(--on-ink);
+  }
+  .news a:hover { color: var(--on-ink-strong); text-decoration: underline; }
 
   .prose { display: grid; gap: 18px; }
   .prose p {
