@@ -2,7 +2,7 @@
 name: Clawform
 tagline: Safe CloudFormation workflows for Claude Code
 status: available
-statusNote: $49 one-time, per seat — 3 device activations
+statusNote: $49 per seat, or $299 for a team — one-time, 3 or 10 activations
 url: https://clawform.thejoseki.com
 npm: "@thejoseki/clawform"
 order: 1
