@@ -1,6 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Joseki">
-  <!-- Same construction as the Clawform mark — accent square, mono glyph — so
-       the two read as one family at 16px, where nothing subtler survives. -->
-  <rect width="32" height="32" rx="6" fill="#FF9900"></rect>
-  <text x="16" y="22.4" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="700" letter-spacing="-0.5" fill="#0A0A0B">J</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Joseki">
+  <!--
+    The Joseki mark, rebuilt as geometry rather than shipped as the raster
+    lockup: a terminal frame open on the right, a prompt chevron, and the one
+    live point on the board.
+
+    Simplified ON PURPOSE from brand/avatar.png. A favicon lives at 16px, and
+    the full logo's six stones plus wordmark render there as a navy smear —
+    verified by rendering it. What survives that size is: frame, chevron, one
+    accent dot. Everything removed was the part that muddied first, and the
+    survivor is also the idea — the single studied move.
+
+    Colours sampled from the source art: #0D1D32 navy, #DA4930 accent, on the
+    cream plate it was drawn against.
+  -->
+  <rect width="64" height="64" rx="13" fill="#FDF9F3"/>
+
+  <g fill="none" stroke="#0D1D32" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Terminal frame, open on the right: three sides only. -->
+    <path d="M45 11H14a1 1 0 0 0-1 1v40a1 1 0 0 0 1 1h31"/>
+    <!-- Prompt chevron. -->
+    <path d="M23 23l9 9-9 9"/>
+  </g>
+
+  <!-- The live point. One stone, because at 16px one is all that reads. -->
+  <circle cx="45" cy="32" r="6.5" fill="#DA4930"/>
 </svg>
