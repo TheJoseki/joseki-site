@@ -65,6 +65,21 @@ const year = new Date().getFullYear();
     src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token": "bba28df8e32b4b4da2c92feb86ca2088"}'
   ></script>
+
+  <!--
+    Plausible Analytics — a second stream alongside Cloudflare Web Analytics.
+    CF gives raw pageviews; Plausible gives outbound-link / goal tracking that
+    CF cannot do.
+
+    The init lives in /plausible-init.js (same origin) rather than inline, so the
+    strict CSP holds without an 'unsafe-inline' or a hash — script-src 'self'
+    already covers it. plausible.io is named in BOTH script-src (the tracker)
+    and connect-src (events POST to plausible.io/api/event) in public/_headers:
+    a script that loads but cannot report sends nothing — the same trap the CF
+    beacon note above describes. is:inline keeps Astro from bundling either tag.
+  -->
+  <script is:inline src="/plausible-init.js"></script>
+  <script is:inline defer src="https://plausible.io/js/pa-2qALZT8cWy3ygofqifc-k.js"></script>
 </head>
 
 <body>
