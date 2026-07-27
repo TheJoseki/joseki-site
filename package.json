@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "verify": "npm run compile && npm --prefix test run verify",
     "deploy": "npm run compile && npx --yes wrangler@4 pages deploy dist --project-name thejoseki --branch main --commit-dirty=true",
-    "astro": "astro"
+    "astro": "astro",
+    "og": "npm --prefix test run og"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

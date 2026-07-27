@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  /* The card is HTML, not a drawn image, so it cannot drift from the site: the
+     same tokens, the same type stack, the same mark. Re-run `npm run og` after
+     touching any of them. */
+  :root {
+    --ink: #0A0A0B;
+    --ink-2: #121214;
+    --line-2: #26262C;
+    --accent: #FF9900;
+    --on-ink: #E9E9EC;
+    --on-ink-strong: #FFFFFF;
+    --on-ink-muted: #9A9AA5;
+    --grid-line: rgba(255,255,255,0.035);
+    --mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px; height: 630px;
+    background: var(--ink);
+    font-family: var(--sans);
+    position: relative;
+    overflow: hidden;
+  }
+  /* The same infrastructure grid the site's hero band carries. */
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(115% 85% at 50% 0%, #000 25%, transparent 78%);
+  }
+  .inner {
+    position: relative;
+    height: 100%;
+    padding: 68px 76px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand img { width: 56px; height: 56px; border-radius: 12px; }
+  .brand span {
+    font-family: var(--mono);
+    font-size: 26px; font-weight: 700; letter-spacing: 0.14em;
+    color: var(--on-ink-strong);
+  }
+  h1 {
+    font-size: 68px; font-weight: 700;
+    letter-spacing: -0.035em; line-height: 1.05;
+    color: var(--on-ink-strong);
+    max-width: 17ch;
+  }
+  .sub {
+    margin-top: 22px;
+    font-size: 25px; line-height: 1.45;
+    color: var(--on-ink-muted);
+    max-width: 42ch;
+  }
+  .foot {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono); font-size: 20px;
+    color: var(--on-ink-muted);
+  }
+  .chip {
+    background: var(--ink-2);
+    border: 1px solid var(--line-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px 18px;
+    color: var(--on-ink);
+  }
+  .chip b { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="inner">
+    <div class="brand">
+      <img src="../public/favicon.svg" alt="">
+      <span>JOSEKI</span>
+    </div>
+
+    <div>
+      <h1>Known-good moves for agentic work.</h1>
+      <p class="sub">
+        Toolkits that give an agent the studied part — so its speed is worth
+        having.
+      </p>
+    </div>
+
+    <div class="foot">
+      <p class="chip"><b>Clawform</b> — safe CloudFormation for Claude Code</p>
+      <p>thejoseki.com</p>
+    </div>
+  </div>
+</body>
+</html>

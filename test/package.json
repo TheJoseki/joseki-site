@@ -6,7 +6,8 @@
   "scripts": {
     "verify": "node verify.mjs",
     "verify:live": "node verify.mjs live",
-    "setup": "npm install && npx playwright install chromium"
+    "setup": "npm install && npx playwright install chromium",
+    "og": "node make-og.mjs"
   },
   "devDependencies": {
     "playwright": "^1.61.1"
