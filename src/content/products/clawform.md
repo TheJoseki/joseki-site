@@ -2,7 +2,7 @@
 name: Clawform
 tagline: Safe CloudFormation workflows for Claude Code
 status: available
-statusNote: Free 14-day trial, no card — then $49 per seat or $299 per team, one-time
+statusNote: Free 14-day trial, no card — then $29 per seat or $79 per team, one-time
 url: https://clawform.thejoseki.com
 npm: "@thejoseki/clawform"
 order: 1
