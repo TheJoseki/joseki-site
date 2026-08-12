@@ -82,8 +82,11 @@ if (!LIVE) {
   // Astro ships a client runtime the moment something becomes an island. This
   // page is inert HTML and must stay that way; a stray .js means a component
   // acquired a client: directive, which is worth knowing before it deploys.
-  const js = files.filter((f) => f.endsWith('.js'));
-  t(js.length === 0, `no client JavaScript emitted${js.length ? `: ${js.join(', ')}` : ''}`);
+  // The two deliberate, same-origin analytics init files (see Base.astro) are
+  // the only allowed exception.
+  const ALLOWED_JS = new Set(['plausible-init.js', 'amplitude-init.js']);
+  const js = files.filter((f) => f.endsWith('.js') && !ALLOWED_JS.has(f));
+  t(js.length === 0, `no client JavaScript emitted beyond the analytics init files${js.length ? `: ${js.join(', ')}` : ''}`);
 
   // `style-src 'self'` refuses inline styles, so inlineStylesheets:'never'
   // must be holding. If a build starts inlining, the page renders unstyled in
@@ -94,6 +97,16 @@ if (!LIVE) {
 
   t(files.includes('_headers'), '_headers copied into the output');
   t(files.includes('favicon.svg'), 'favicon copied into the output');
+
+  // CSP correctness itself can't be checked by this harness — _headers is a
+  // Cloudflare Pages artifact the local static server below does not serve,
+  // so a real CSP violation only shows up against the deployed site. This is
+  // a cheap floor, not a substitute: the directives the Amplitude script tags
+  // need are at least textually present, so a hand-edit that drops one fails
+  // here instead of only in production.
+  const headersText = readFileSync(join(OUT, '_headers'), 'utf8');
+  t(headersText.includes('https://*.amplitude.com'), '_headers allowlists https://*.amplitude.com');
+  t(headersText.includes("worker-src 'self' blob:"), "_headers sets worker-src 'self' blob: (session-replay compression worker)");
 
   // The accent is defined once, on purpose: sharing Clawform's orange is a
   // reversible decision only while there is a single place to reverse it.
@@ -120,8 +133,11 @@ const VIEWPORTS = [
 
 // Cloudflare injects a Web Analytics beacon into the served HTML. Expected on
 // the deployed site, absent locally; allowlisted by host so that anything else
-// third-party still fails.
-const EXPECTED_THIRD_PARTY = /cloudflareinsights\.com/;
+// third-party still fails. Amplitude is allowlisted the same way, for the
+// opposite reason: its CDN script DOES load from localhost (unlike the CF
+// beacon) and would otherwise init for real and POST real events tagged with
+// a 127.0.0.1 page URL into the live Amplitude project on every verify run.
+const EXPECTED_THIRD_PARTY = /cloudflareinsights\.com|amplitude\.com/;
 
 const browser = await chromium.launch();
 
@@ -145,6 +161,7 @@ for (const { w, h, name } of VIEWPORTS) {
   // so no string filter can tell it from a real error. Fulfilled empty rather
   // than aborted: an abort still logs ERR_FAILED, which is the noise removed.
   if (!LIVE) await page.route('**/static.cloudflareinsights.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+  if (!LIVE) await page.route('**/*.amplitude.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
 
   await page.goto(TARGET, { waitUntil: 'networkidle' });
   console.log(`\n--- ${name} ${w}x${h} ${'-'.repeat(38)}`);
@@ -179,6 +196,7 @@ for (const { w, h, name } of VIEWPORTS) {
   // so no string filter can tell it from a real error. Fulfilled empty rather
   // than aborted: an abort still logs ERR_FAILED, which is the noise removed.
   if (!LIVE) await page.route('**/static.cloudflareinsights.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+  if (!LIVE) await page.route('**/*.amplitude.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
   await page.goto(TARGET, { waitUntil: 'networkidle' });
   console.log(`\n--- contrast ${'-'.repeat(46)}`);
 
@@ -256,6 +274,7 @@ for (const { w, h, name } of VIEWPORTS) {
   // so no string filter can tell it from a real error. Fulfilled empty rather
   // than aborted: an abort still logs ERR_FAILED, which is the noise removed.
   if (!LIVE) await page.route('**/static.cloudflareinsights.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+  if (!LIVE) await page.route('**/*.amplitude.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
   await page.goto(TARGET, { waitUntil: 'networkidle' });
   console.log(`\n--- keyboard ${'-'.repeat(46)}`);
 
@@ -291,6 +310,7 @@ for (const { w, h, name } of VIEWPORTS) {
   // so no string filter can tell it from a real error. Fulfilled empty rather
   // than aborted: an abort still logs ERR_FAILED, which is the noise removed.
   if (!LIVE) await page.route('**/static.cloudflareinsights.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+  if (!LIVE) await page.route('**/*.amplitude.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
   await page.goto(TARGET, { waitUntil: 'networkidle' });
   const scroll = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
   t(scroll === 'auto', `reduced motion disables smooth scrolling (got "${scroll}")`);

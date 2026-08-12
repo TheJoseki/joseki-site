@@ -16,9 +16,23 @@
 #
 # Astro is configured with inlineStylesheets:'never' so `style-src 'self'`
 # holds. If a build starts inlining a <style> block, this is what breaks.
+#
+# Amplitude: script-src/connect-src get https://*.amplitude.com (the wildcard
+# subdomain is Amplitude's own documented requirement for this script-loader +
+# autocapture + session-replay integration — https://amplitude.com/docs/get-started/autocapture
+# and https://amplitude.com/docs/sdks/session-replay/session-replay-plugin;
+# event ingestion, remote config, and session-replay upload each use a
+# different subdomain, so pinning one exact host risks the same
+# loads-but-silently-fails-to-report trap the paragraph above describes).
+# worker-src is a new directive, not just an addition to an existing one:
+# Session Replay compresses recordings in a Web Worker, and with no worker-src
+# at all it falls back to default-src 'none' and the worker fails to spawn —
+# same silent-failure shape, one directive earlier in the pipeline.
+# Copied from clawform-lp (same shared Amplitude project — see
+# public/amplitude-init.js), re-checked here too, not assumed.
 
 /*
-  Content-Security-Policy: default-src 'none'; script-src 'self' https://static.cloudflareinsights.com https://plausible.io; connect-src 'self' https://static.cloudflareinsights.com https://cloudflareinsights.com https://plausible.io; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'none'; script-src 'self' https://static.cloudflareinsights.com https://plausible.io https://*.amplitude.com; connect-src 'self' https://static.cloudflareinsights.com https://cloudflareinsights.com https://plausible.io https://*.amplitude.com; worker-src 'self' blob:; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()

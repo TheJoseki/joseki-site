@@ -80,6 +80,23 @@ const year = new Date().getFullYear();
   -->
   <script is:inline src="/plausible-init.js"></script>
   <script is:inline defer src="https://plausible.io/js/pa-2qALZT8cWy3ygofqifc-k.js"></script>
+
+  <!--
+    Amplitude — product analytics + session replay, a third stream alongside
+    Cloudflare (raw pageviews) and Plausible (outbound/goal tracking). Where
+    the other two stop at "did a pageview happen", Amplitude answers "what did
+    this visitor actually do" (autocapture) and lets it be watched back
+    (session replay).
+
+    Loader script first (defines window.amplitude / window.sessionReplay),
+    then /amplitude-init.js (same-origin, see that file for why the init call
+    isn't inlined here — same CSP reasoning as Plausible above, and for why
+    this shares clawform-lp's Amplitude project instead of getting its own).
+    Order matters: neither tag is async/defer, so the loader finishes before
+    init runs.
+  -->
+  <script is:inline src="https://cdn.amplitude.com/script/d246bc9d34b889c1d6ba523262865a77.js"></script>
+  <script is:inline src="/amplitude-init.js"></script>
 </head>
 
 <body>
